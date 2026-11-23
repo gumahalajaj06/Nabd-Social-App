@@ -1,0 +1,370 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Public Nabd user profile without PII.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "username": { "type": "string" },
+        "bio": { "type": "string" },
+        "location": { "type": "string" },
+        "website": { "type": "string" },
+        "avatarColor": { "type": "string" },
+        "verifiedType": { "type": "string", "enum": ["none", "personal", "business", "government"] },
+        "officialLabel": { "type": "string" },
+        "followersCount": { "type": "integer" },
+        "followingCount": { "type": "integer" },
+        "isPrivate": { "type": "boolean" },
+        "accountStatus": { "type": "string", "enum": ["active"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "username", "avatarColor", "verifiedType", "followersCount", "followingCount", "isPrivate", "accountStatus", "createdAt"]
+    },
+    "UsernameClaim": {
+      "title": "UsernameClaim",
+      "description": "Unique lowercase username reservation lookup.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "username": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username", "createdAt"]
+    },
+    "FollowEdge": {
+      "title": "FollowEdge",
+      "description": "Following relationship edge.",
+      "type": "object",
+      "properties": {
+        "targetUid": { "type": "string" },
+        "targetName": { "type": "string" },
+        "targetUsername": { "type": "string" },
+        "targetAvatarColor": { "type": "string" },
+        "targetVerifiedType": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["targetUid", "targetName", "targetUsername", "createdAt"]
+    },
+    "FollowerEdge": {
+      "title": "FollowerEdge",
+      "description": "Follower relationship edge.",
+      "type": "object",
+      "properties": {
+        "followerUid": { "type": "string" },
+        "followerName": { "type": "string" },
+        "followerUsername": { "type": "string" },
+        "followerAvatarColor": { "type": "string" },
+        "followerVerifiedType": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["followerUid", "followerName", "followerUsername", "createdAt"]
+    },
+    "FollowRequest": {
+      "title": "FollowRequest",
+      "description": "Pending follow request for private accounts.",
+      "type": "object",
+      "properties": {
+        "requesterUid": { "type": "string" },
+        "requesterName": { "type": "string" },
+        "requesterUsername": { "type": "string" },
+        "requesterAvatarColor": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["requesterUid", "requesterName", "requesterUsername", "createdAt"]
+    },
+    "Bookmark": {
+      "title": "Bookmark",
+      "description": "Saved post reference.",
+      "type": "object",
+      "properties": {
+        "postId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["postId", "createdAt"]
+    },
+    "BlockedUser": {
+      "title": "BlockedUser",
+      "description": "Blocked user entry.",
+      "type": "object",
+      "properties": {
+        "blockedUid": { "type": "string" },
+        "blockedUsername": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["blockedUid", "blockedUsername", "createdAt"]
+    },
+    "MutedWord": {
+      "title": "MutedWord",
+      "description": "Muted keyword or hashtag.",
+      "type": "object",
+      "properties": {
+        "word": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["word", "createdAt"]
+    },
+    "AppNotification": {
+      "title": "AppNotification",
+      "description": "User notification item.",
+      "type": "object",
+      "properties": {
+        "targetUserId": { "type": "string" },
+        "actorId": { "type": "string" },
+        "actorName": { "type": "string" },
+        "actorUsername": { "type": "string" },
+        "actorAvatarColor": { "type": "string" },
+        "actorVerifiedType": { "type": "string" },
+        "type": { "type": "string", "enum": ["like", "reply", "repost", "mention", "follow", "verified"] },
+        "postId": { "type": "string" },
+        "previewText": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["targetUserId", "actorId", "actorName", "actorUsername", "type", "previewText", "isRead", "createdAt"]
+    },
+    "PrivateDeviceConfig": {
+      "title": "PrivateDeviceConfig",
+      "description": "Owner-only FCM token and device preferences.",
+      "type": "object",
+      "properties": {
+        "fcmToken": { "type": "string" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["updatedAt"]
+    },
+    "VerificationRequest": {
+      "title": "VerificationRequest",
+      "description": "Verification application submitted by user for admin review.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "username": { "type": "string" },
+        "requestedType": { "type": "string", "enum": ["personal", "business", "government"] },
+        "organizationName": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "submittedAt": { "type": "string", "format": "date-time" },
+        "reviewedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "userName", "username", "requestedType", "reason", "status", "submittedAt"]
+    },
+    "Post": {
+      "title": "Post",
+      "description": "Text-only microblogging post, reply, quote post, or poll.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorUsername": { "type": "string" },
+        "authorVerifiedType": { "type": "string", "enum": ["none", "personal", "business", "government"] },
+        "authorAvatarColor": { "type": "string" },
+        "content": { "type": "string" },
+        "threadParentId": { "type": "string" },
+        "threadRootId": { "type": "string" },
+        "quotePostId": { "type": "string" },
+        "quoteAuthorName": { "type": "string" },
+        "quoteAuthorUsername": { "type": "string" },
+        "quoteContent": { "type": "string" },
+        "replyToPostId": { "type": "string" },
+        "pinnedReplyId": { "type": "string" },
+        "authorLikedReply": { "type": "boolean" },
+        "poll": { "type": "object" },
+        "hashtags": { "type": "array" },
+        "mentions": { "type": "array" },
+        "likesCount": { "type": "integer" },
+        "repostsCount": { "type": "integer" },
+        "repliesCount": { "type": "integer" },
+        "visibility": { "type": "string", "enum": ["public", "followers"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "authorName", "authorUsername", "authorVerifiedType", "content", "hashtags", "mentions", "likesCount", "repostsCount", "repliesCount", "visibility", "createdAt", "updatedAt"]
+    },
+    "PostReaction": {
+      "title": "PostReaction",
+      "description": "Like or repost marker for a post.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "postId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "postId", "createdAt"]
+    },
+    "PostReport": {
+      "title": "PostReport",
+      "description": "Moderation report for a post.",
+      "type": "object",
+      "properties": {
+        "reporterId": { "type": "string" },
+        "postId": { "type": "string" },
+        "reason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["reporterId", "postId", "reason", "createdAt"]
+    },
+    "TextStory": {
+      "title": "TextStory",
+      "description": "24-hour text-only story.",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorUsername": { "type": "string" },
+        "authorVerifiedType": { "type": "string" },
+        "authorAvatarColor": { "type": "string" },
+        "text": { "type": "string" },
+        "backgroundColor": { "type": "string" },
+        "gradientEndColor": { "type": "string" },
+        "fontStyle": { "type": "string", "enum": ["cairo", "amiri", "tajawal", "mono"] },
+        "textAlign": { "type": "string", "enum": ["start", "center", "end"] },
+        "viewsCount": { "type": "integer" },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["authorId", "authorName", "authorVerifiedType", "text", "backgroundColor", "fontStyle", "viewsCount", "isActive", "createdAt", "expiresAt"]
+    },
+    "StoryViewer": {
+      "title": "StoryViewer",
+      "description": "Recorded story view.",
+      "type": "object",
+      "properties": {
+        "viewerId": { "type": "string" },
+        "storyAuthorId": { "type": "string" },
+        "viewerName": { "type": "string" },
+        "viewerUsername": { "type": "string" },
+        "viewerAvatarColor": { "type": "string" },
+        "viewedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["viewerId", "storyAuthorId", "viewerName", "viewerUsername", "viewedAt"]
+    },
+    "ChatThread": {
+      "title": "ChatThread",
+      "description": "1:1 direct message conversation metadata.",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array" },
+        "participantNames": { "type": "object" },
+        "participantUsernames": { "type": "object" },
+        "participantAvatarColors": { "type": "object" },
+        "participantVerifiedTypes": { "type": "object" },
+        "lastMessageText": { "type": "string" },
+        "lastMessageType": { "type": "string", "enum": ["text", "voice"] },
+        "lastMessageSenderId": { "type": "string" },
+        "lastMessageTimestamp": { "type": "string", "format": "date-time" },
+        "unreadCounts": { "type": "object" },
+        "typingUsers": { "type": "object" },
+        "recordingUsers": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["participants", "lastMessageText", "lastMessageType", "lastMessageTimestamp", "unreadCounts", "createdAt", "updatedAt"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Text or compressed AAC voice message.",
+      "type": "object",
+      "properties": {
+        "participants": { "type": "array" },
+        "senderId": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "voice"] },
+        "textContent": { "type": "string" },
+        "audioBase64OrUrl": { "type": "string" },
+        "audioDurationSec": { "type": "integer" },
+        "waveform": { "type": "array" },
+        "replyToMessageId": { "type": "string" },
+        "replyPreviewText": { "type": "string" },
+        "reactions": { "type": "object" },
+        "deletedFor": { "type": "array" },
+        "deletedForEveryone": { "type": "boolean" },
+        "status": { "type": "string", "enum": ["sent", "delivered", "read"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["participants", "senderId", "type", "deletedForEveryone", "status", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Public user profiles."
+    },
+    "/usernames/{usernameLower}": {
+      "schema": { "$ref": "#/entities/UsernameClaim" },
+      "description": "Unique lowercase username claims."
+    },
+    "/users/{userId}/following/{targetUid}": {
+      "schema": { "$ref": "#/entities/FollowEdge" },
+      "description": "Followed accounts."
+    },
+    "/users/{userId}/followers/{followerUid}": {
+      "schema": { "$ref": "#/entities/FollowerEdge" },
+      "description": "Followers of a user."
+    },
+    "/users/{userId}/follow_requests/{requesterUid}": {
+      "schema": { "$ref": "#/entities/FollowRequest" },
+      "description": "Pending follow requests for private accounts."
+    },
+    "/users/{userId}/bookmarks/{postId}": {
+      "schema": { "$ref": "#/entities/Bookmark" },
+      "description": "User bookmarks."
+    },
+    "/users/{userId}/blocked/{blockedUid}": {
+      "schema": { "$ref": "#/entities/BlockedUser" },
+      "description": "Blocked user list."
+    },
+    "/users/{userId}/muted_words/{wordId}": {
+      "schema": { "$ref": "#/entities/MutedWord" },
+      "description": "Muted words and hashtags."
+    },
+    "/users/{userId}/notifications/{notifId}": {
+      "schema": { "$ref": "#/entities/AppNotification" },
+      "description": "In-app notifications."
+    },
+    "/users/{userId}/private/{docId}": {
+      "schema": { "$ref": "#/entities/PrivateDeviceConfig" },
+      "description": "Private device settings."
+    },
+    "/verification_requests/{requestId}": {
+      "schema": { "$ref": "#/entities/VerificationRequest" },
+      "description": "Verification applications and admin queue."
+    },
+    "/posts/{postId}": {
+      "schema": { "$ref": "#/entities/Post" },
+      "description": "Text posts, replies, quote posts, and polls."
+    },
+    "/posts/{postId}/likes/{userId}": {
+      "schema": { "$ref": "#/entities/PostReaction" },
+      "description": "Post likes."
+    },
+    "/posts/{postId}/reposts/{userId}": {
+      "schema": { "$ref": "#/entities/PostReaction" },
+      "description": "Post reposts."
+    },
+    "/posts/{postId}/reports/{reportId}": {
+      "schema": { "$ref": "#/entities/PostReport" },
+      "description": "Post abuse reports."
+    },
+    "/stories/{storyId}": {
+      "schema": { "$ref": "#/entities/TextStory" },
+      "description": "24-hour text stories."
+    },
+    "/stories/{storyId}/viewers/{viewerId}": {
+      "schema": { "$ref": "#/entities/StoryViewer" },
+      "description": "Story view records."
+    },
+    "/chats/{chatId}": {
+      "schema": { "$ref": "#/entities/ChatThread" },
+      "description": "Direct message threads."
+    },
+    "/chats/{chatId}/messages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Direct messages (text and voice notes)."
+    }
+  }
+}

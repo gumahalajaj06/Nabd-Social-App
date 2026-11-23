@@ -1,0 +1,13 @@
+{
+  "name": "nabd-cloud-functions",
+  "version": "1.0.0",
+  "description": "Firebase Cloud Functions for Nabd text-only microblogging platform",
+  "main": "index.js",
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.7.0",
+    "firebase-functions": "^5.1.1"
+  }
+}

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Nabd</string>
+    <string name="tagline">Des idées pures, sans bruit visuel.</string>
+    <string name="action_skip">Passer</string>
+    <string name="action_next">Suivant</string>
+    <string name="action_get_started">Commencer</string>
+    <string name="auth_sign_in">Se connecter</string>
+    <string name="auth_create_account">Créer un compte</string>
+    <string name="auth_continue_google">Continuer avec Google</string>
+    <string name="nav_feed">Fil</string>
+    <string name="nav_explore">Explorer</string>
+    <string name="nav_chats">Messages</string>
+    <string name="nav_profile">Profil</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_language">Langue</string>
+    <string name="chat_attach_photo_video">Photo ou vidéo</string>
+    <string name="chat_attach_file">Tout fichier ou document</string>
+</resources>

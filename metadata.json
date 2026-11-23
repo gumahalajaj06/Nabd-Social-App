@@ -1,0 +1,6 @@
+{
+  "name": "Nabd",
+  "description": "Nabd (نَبْض) — Text-only microblogging, 24h text stories, and offline-first voice & text messaging platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

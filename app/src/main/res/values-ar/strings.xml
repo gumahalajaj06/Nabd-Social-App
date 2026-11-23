@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">نبض</string>
+    <string name="tagline">أفكار نقية، بلا ضوضاء بصرية.</string>
+    <string name="action_skip">تخطي</string>
+    <string name="action_next">التالي</string>
+    <string name="action_get_started">ابدأ الآن</string>
+    <string name="auth_sign_in">تسجيل الدخول</string>
+    <string name="auth_create_account">إنشاء حساب</string>
+    <string name="auth_continue_google">المتابعة باستخدام Google</string>
+    <string name="nav_feed">الرئيسية</string>
+    <string name="nav_explore">استكشف</string>
+    <string name="nav_chats">المحادثات</string>
+    <string name="nav_profile">حسابي</string>
+    <string name="settings_title">الإعدادات</string>
+    <string name="settings_language">اللغة</string>
+    <string name="chat_attach_photo_video">صورة أو فيديو</string>
+    <string name="chat_attach_file">ملف أو مستند بأي صيغة</string>
+</resources>

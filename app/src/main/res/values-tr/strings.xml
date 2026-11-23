@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Nabd</string>
+    <string name="tagline">Saf fikirler, sıfır görsel gürültü.</string>
+    <string name="action_skip">Atla</string>
+    <string name="action_next">İleri</string>
+    <string name="action_get_started">Başla</string>
+    <string name="auth_sign_in">Giriş Yap</string>
+    <string name="auth_create_account">Hesap Oluştur</string>
+    <string name="auth_continue_google">Google ile Devam Et</string>
+    <string name="nav_feed">Akış</string>
+    <string name="nav_explore">Keşfet</string>
+    <string name="nav_chats">Sohbetler</string>
+    <string name="nav_profile">Profil</string>
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_language">Dil</string>
+    <string name="chat_attach_photo_video">Fotoğraf veya Video</string>
+    <string name="chat_attach_file">Herhangi Bir Dosya veya Belge</string>
+</resources>
