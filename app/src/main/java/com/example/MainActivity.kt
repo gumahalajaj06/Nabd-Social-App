@@ -2,6 +2,13 @@ package com.example
 
 import android.content.Context
 import android.os.Bundle
+import com.example.data.remote.EthoraCallManager
+import com.example.data.remote.CallType
+import com.example.data.remote.CallState
+import com.example.data.remote.CallSession
+import com.example.ui.screens.IncomingCallOverlay
+import com.example.ui.screens.ActiveVoiceCallScreen
+import com.example.ui.screens.ActiveVideoCallScreen
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -456,6 +463,14 @@ private fun MainWorkspace(
     val recordingDurationSec by chatViewModel.recordingDurationSec.collectAsStateWithLifecycle()
     val playbackState by chatViewModel.playbackState.collectAsStateWithLifecycle()
 
+    val callManager = remember { EthoraCallManager(context) }
+    val currentCall by callManager.currentCall.collectAsStateWithLifecycle()
+    val callState by callManager.callState.collectAsStateWithLifecycle()
+    val isMuted by callManager.isMuted.collectAsStateWithLifecycle()
+    val isSpeakerOn by callManager.isSpeakerOn.collectAsStateWithLifecycle()
+    val isCameraOn by callManager.isCameraOn.collectAsStateWithLifecycle()
+    val isFrontCamera by callManager.isFrontCamera.collectAsStateWithLifecycle()
+
     var selectedTab by remember { mutableIntStateOf(0) }
     var exploreQuery by remember { mutableStateOf("") }
     val overlayStack = remember { mutableStateListOf<NabdOverlay>() }
@@ -530,35 +545,36 @@ private fun MainWorkspace(
                 color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.fillMaxSize()
             ) {
-                if (sessionLocked) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize().padding(24.dp)
-                    ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.spacedBy(14.dp)
+                Box(modifier = Modifier.fillMaxSize()) {
+                    if (sessionLocked) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier.fillMaxSize().padding(24.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Lock,
-                                contentDescription = "Nabd Locked",
-                                tint = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Text("Nabd Session Locked", style = MaterialTheme.typography.titleLarge)
-                            Text(
-                                text = "Signed in as @${me.username}",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Button(
-                                onClick = { sessionLocked = false },
-                                modifier = Modifier.testTag("unlock_nabd_btn")
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.spacedBy(14.dp)
                             ) {
-                                Text("Unlock Nabd")
+                                Icon(
+                                    imageVector = Icons.Outlined.Lock,
+                                    contentDescription = "Nabd Locked",
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(48.dp)
+                                )
+                                Text("Nabd Session Locked", style = MaterialTheme.typography.titleLarge)
+                                Text(
+                                    text = "Signed in as @${me.username}",
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                                Button(
+                                    onClick = { sessionLocked = false },
+                                    modifier = Modifier.testTag("unlock_nabd_btn")
+                                ) {
+                                    Text("Unlock Nabd")
+                                }
                             }
                         }
-                    }
-                } else {
+                    } else {
                     BackHandler(enabled = topOverlay != null || selectedTab != 0) {
                         if (topOverlay != null) {
                             popOverlay()
@@ -1289,6 +1305,40 @@ private fun MainWorkspace(
                         dismissButton = {
                             TextButton(onClick = { showEditProfileDialog = false }) { Text("Cancel") }
                         }
+                    )
+                }
+            }
+        }
+
+            if (callState == CallState.INCOMING_RINGING && currentCall != null && currentCall?.calleeId == me.uid) {
+                IncomingCallOverlay(
+                    callSession = currentCall!!,
+                    onAccept = { callManager.acceptCall(currentCall!!) },
+                    onDecline = { callManager.declineCall(currentCall!!) }
+                )
+            } else if (callState == CallState.ACTIVE || callState == CallState.OUTGOING_RINGING) {
+                if (currentCall?.callType == "video") {
+                    ActiveVideoCallScreen(
+                        callSession = currentCall ?: CallSession(),
+                        isMuted = isMuted,
+                        isSpeakerOn = isSpeakerOn,
+                        isCameraOn = isCameraOn,
+                        isFrontCamera = isFrontCamera,
+                        onToggleMute = callManager::toggleMute,
+                        onToggleSpeaker = callManager::toggleSpeaker,
+                        onToggleCamera = callManager::toggleCamera,
+                        onFlipCamera = callManager::flipCamera,
+                        onEndCall = { callManager.endCall(currentCall) }
+                    )
+                } else {
+                    ActiveVoiceCallScreen(
+                        callSession = currentCall ?: CallSession(),
+                        isMuted = isMuted,
+                        isSpeakerOn = isSpeakerOn,
+                        onToggleMute = callManager::toggleMute,
+                        onToggleSpeaker = callManager::toggleSpeaker,
+                        onSwitchToVideo = {},
+                        onEndCall = { callManager.endCall(currentCall) }
                     )
                 }
             }

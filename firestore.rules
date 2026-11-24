@@ -94,7 +94,8 @@ service cloud.firestore {
              (!('pinnedNote' in data) || (data.pinnedNote is string && data.pinnedNote.size() <= 120)) &&
              data.avatarColor is string && data.avatarColor.size() >= 4 && data.avatarColor.size() <= 9 &&
              (!('avatarPattern' in data) || data.avatarPattern in ['solid', 'rings', 'dots', 'diagonal', 'pulse']) &&
-             data.verifiedType in ['none', 'personal', 'business', 'government'] &&
+             data.verifiedType in ['none', 'personal', 'business', 'government', 'approved', 'true', 'verified'] &&
+             (!('verified' in data) || data.verified is bool) &&
              (!('showVerifiedBadge' in data) || data.showVerifiedBadge is bool) &&
              (!('officialLabel' in data) || (data.officialLabel is string && data.officialLabel.size() <= 60)) &&
              (!('pinnedPostId' in data) || (data.pinnedPostId is string && data.pinnedPostId.size() <= 128)) &&
@@ -591,6 +592,10 @@ service cloud.firestore {
                          isValidMessage(incoming());
 
         allow delete: if isSignedIn() && isValidId(messageId) && existing().senderId == request.auth.uid;
+      }
+
+      match /calls/{callId} {
+        allow get, list, create, update, delete: if isSignedIn() && isValidId(callId);
       }
     }
   }

@@ -20,8 +20,13 @@ enum class VerifiedType(val key: String) {
     GOVERNMENT("government");
 
     companion object {
-        fun fromKey(raw: String?): VerifiedType =
-            entries.firstOrNull { it.key == raw } ?: NONE
+        fun fromKey(raw: String?): VerifiedType = when {
+            raw.isNullOrBlank() -> NONE
+            raw.equals("approved", ignoreCase = true) -> PERSONAL
+            raw.equals("true", ignoreCase = true) -> PERSONAL
+            raw.equals("verified", ignoreCase = true) -> PERSONAL
+            else -> entries.firstOrNull { it.key.equals(raw, ignoreCase = true) } ?: NONE
+        }
     }
 }
 
@@ -143,6 +148,7 @@ data class UserProfile(
     val avatarColor: String = "#0D9488",
     val avatarPattern: String = "solid", // "solid" | "rings" | "dots" | "diagonal" | "pulse"
     val verifiedType: String = "none",
+    val verified: Boolean = false,
     val showVerifiedBadge: Boolean = true,
     val officialLabel: String = "",
     val pinnedPostId: String = "",
@@ -160,11 +166,18 @@ data class UserProfile(
     @ServerTimestamp val createdAt: Timestamp? = null,
     @ServerTimestamp val updatedAt: Timestamp? = null
 ) {
+    val effectiveVerifiedType: String
+        get() = if (verifiedType.equals("approved", true) || verifiedType.equals("true", true) || verifiedType.equals("verified", true) || verified) {
+            "personal"
+        } else {
+            verifiedType
+        }
+
     val maxPostLength: Int
-        get() = if (VerifiedType.fromKey(verifiedType) != VerifiedType.NONE) 2000 else 500
+        get() = if (VerifiedType.fromKey(effectiveVerifiedType) != VerifiedType.NONE) 2000 else 500
 
     val displayedVerifiedType: String
-        get() = if (showVerifiedBadge) verifiedType else "none"
+        get() = if (showVerifiedBadge) effectiveVerifiedType else "none"
 }
 
 @Keep

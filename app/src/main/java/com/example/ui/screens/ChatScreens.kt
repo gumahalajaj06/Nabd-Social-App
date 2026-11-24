@@ -42,6 +42,8 @@ import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DoneAll
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
@@ -288,7 +290,9 @@ fun ChatRoomScreen(
     onSetReply: (ChatMessage?) -> Unit,
     onReact: (ChatMessage, String) -> Unit,
     onDeleteMessage: (ChatMessage, Boolean) -> Unit,
-    onMarkRead: (List<ChatMessage>) -> Unit
+    onMarkRead: (List<ChatMessage>) -> Unit,
+    onStartVoiceCall: () -> Unit = {},
+    onStartVideoCall: () -> Unit = {}
 ) {
     BackHandler(onBack = onBack)
     val context = LocalContext.current
@@ -375,6 +379,14 @@ fun ChatRoomScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onStartVoiceCall, modifier = Modifier.testTag("start_voice_call_btn")) {
+                        Icon(Icons.Filled.Call, contentDescription = "Voice Call", tint = MaterialTheme.colorScheme.primary)
+                    }
+                    IconButton(onClick = onStartVideoCall, modifier = Modifier.testTag("start_video_call_btn")) {
+                        Icon(Icons.Filled.Videocam, contentDescription = "Video Call", tint = MaterialTheme.colorScheme.primary)
                     }
                 }
             )
